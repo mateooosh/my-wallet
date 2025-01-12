@@ -1,12 +1,30 @@
 import styled from 'styled-components'
 
-export const ChartLimit = styled.div`
+interface ChartLimitProps {
+  $limitHeight?: number,
+  theme: any
+}
+
+export const ChartLimit = styled.div<ChartLimitProps>`
   position: absolute;
-  top: 10px;
-  left: 0;
+  bottom: ${({ $limitHeight }) => ($limitHeight) + '%'};
+  left: -8px;
+  //right: -8px;
   height: 2px;
-  width: 100%;
+  width: calc(100% + 16px);
   border-radius: 6px;
-  background-color: #DB6565;
-  z-index: 0
+  background-color: ${({ theme }) => theme.theme.danger};
+  z-index: 0;
+  //animation: example 2s;
+
+  //@keyframes example {
+  //  from {
+  //    width: 0;
+  //    //right: -8px;
+  //  }
+  //  to {
+  //    width: calc(100% + 16px);
+  //    //right: 8px;
+  //  }
+  //}
 `

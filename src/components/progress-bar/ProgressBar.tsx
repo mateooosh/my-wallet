@@ -26,7 +26,7 @@ export function ProgressBar({ value = 0 }: Props) {
         position: 'absolute',
         top: 0,
         left: 0,
-        backgroundColor: '#FDC323',
+        backgroundColor: theme.warning,
         transition: 'width 1.8s cubic-bezier(0.4, 0, 0, 1)'
       }}></div>
     </div>

@@ -1,9 +1,10 @@
 import { useTheme } from 'styled-components'
 import { Flex } from '../styled/flexbox.ts'
-import { Body1 } from '../styled/fonts.ts'
+import { Body1, Body2 } from '../styled/fonts.ts'
 import { ChartBar } from './ChartBar.tsx'
 import { ChartLimit } from './chartLimit.ts'
-import { Pill } from '../pill/Pill.tsx'
+import { useMemo } from 'react'
+import * as _ from 'lodash'
 
 interface DataSourceItem {
   value: number
@@ -14,22 +15,36 @@ interface Props {
   dataSource: Array<DataSourceItem>
 }
 
+const LIMIT = 600
+
 export function Chart({ dataSource }: Props) {
   const { theme } = useTheme()
 
+  const generateYAxisLabels = (maxValue: number): number[]  => {
+    const numberOfSteps: number = 4
+    const step: number = maxValue / (numberOfSteps - 1)
+    return _.reverse(_.range(numberOfSteps).map(i => Math.round(i * step)))
+  }
+
+  const max = useMemo(() => _.max([_.maxBy(dataSource, 'value').value, LIMIT]), [dataSource])
+
+  const yAxis: number[] = useMemo(() => {
+    return generateYAxisLabels(max)
+
+  }, [dataSource])
+
   return (
-    <Flex $gap="16px">
-      <Flex $direction="column" $align="center" $gap="32px" style={{ paddingBottom: 22 }}>
-        <Pill>900</Pill>
-        <Body1>600</Body1>
-        <Body1>300</Body1>
-        <Body1>0</Body1>
+    <Flex $gap="16px" style={{ paddingBottom: 24 }}>
+      <Flex $direction="column" $align="center" $gap="32px">
+        {yAxis.map((label: number, key: number) =>
+          <Body2 key={key}>{label}</Body2>
+        )}
       </Flex>
       <Flex $gap="16px" $grow="1" style={{ position: 'relative' }}>
-        {dataSource.map((item, index) =>
-          <ChartBar key={index} caption={item.label} value={item.value} height={(item.value / 1000) * 100 + '%'}/>
+        {dataSource.map((item: DataSourceItem, key: number) =>
+          <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={LIMIT}/>
         )}
-        <ChartLimit/>
+        <ChartLimit $limitHeight={LIMIT / max * 100}/>
       </Flex>
     </Flex>
   )

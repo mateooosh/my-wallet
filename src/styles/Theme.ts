@@ -1,25 +1,31 @@
 import { DefaultTheme } from 'styled-components'
 
 export const light: DefaultTheme = {
-  colors: {
-    primary: '#FAFAFA',
-    secondary: '#FFC80A',
-    tertiary: '#303030'
+  font: {
+    primary: '#333333',
+    secondary: '#4F4F4F',
+    tertiary: '#727272'
   },
   theme: {
     primary: '#00785D',
-    background: '#EEEEEE'
+    background: '#FDFDFD',
+    danger: '#DB6565',
+    warning: '#FDC323',
+    divider: '#EEE'
   }
 }
 
 export const dark: DefaultTheme = {
-  colors: {
-    primary: '#FAFAFA',
-    secondary: '#FFC80A',
-    tertiary: '#303030',
+  font: {
+    primary: '#EAEAEA',
+    secondary: '#B3B3B3',
+    tertiary: '#8C8C8C',
   },
   theme: {
     primary: '#00785D',
-    background: '#222222'
+    background: '#222222',
+    danger: '#DB6565',
+    warning: '#FDC323',
+    divider: '#282828'
   }
 }
