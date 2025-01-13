@@ -1,18 +1,20 @@
-import { useTheme } from 'styled-components'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Flex } from '../styled/flexbox.ts'
 import { Body1, Body2 } from '../styled/fonts.ts'
+import { useSelector } from 'react-redux'
+import SettingsModel from '../../models/SettingsModel.ts'
 
 interface Props {
-  icon: string
   categoryName: string
-  amount: string
+  amount: number
   percentage: number
-  backgroundColor: string
 }
 
-export function CategoryItem({ icon, categoryName, amount, percentage, backgroundColor }: Props) {
-  const { theme } = useTheme()
+export function CategoryItem({ categoryName, amount, percentage }: Props) {
+  const currency = useSelector(state => state.currency)
+  const categoriesMap = useSelector(state => SettingsModel.getCategoriesMap(state.categories))
+  const icon: string = useMemo(() => categoriesMap[categoryName].icon, [categoriesMap, categoryName])
+  const backgroundColor: string = useMemo(() => categoriesMap[categoryName].color, [categoriesMap, categoryName])
 
   const [IconComponent, setIconComponent] = useState(null)
   const [animatedPercentage, setAnimatedPercentage] = useState(0)
@@ -46,7 +48,7 @@ export function CategoryItem({ icon, categoryName, amount, percentage, backgroun
         <Body1>{categoryName}</Body1>
       </Flex>
       <Flex $direction="column" $align="flex-end" style={{ zIndex: 2 }}>
-        <Body1>{amount}</Body1>
+        <Body1>{amount} {currency}</Body1>
         <Body2>{percentage}%</Body2>
       </Flex>
 

@@ -7,6 +7,10 @@ import { CategoryItem } from '../../components/category-item/CategoryItem.tsx'
 import { TransactionItem } from '../../components/transaction-item/TransactionItem.tsx'
 import Documentation from '../documentation/Documentation.tsx'
 import { useNavigate } from 'react-router-dom'
+import { useMemo } from 'react'
+import { transactions } from '../../mocks/mocks.ts'
+import * as _ from 'lodash'
+import TransactionModel from '../../models/TransactionModel.ts'
 
 const dataSource = [
   {
@@ -35,6 +39,40 @@ function Main() {
     navigate('/documentation')
   }
 
+  const spendings: TransactionModel[] = useMemo(() => {
+    return _.filter(transactions, (transaction: TransactionModel): boolean => transaction.amount < 0)
+  }, [transactions])
+
+  const totalSpending: number = useMemo(() => {
+    return Math.abs(_.sumBy(spendings, 'amount'))
+  }, [spendings])
+
+  const spendingsByCategorySum = useMemo(() => {
+    const spendingsByCategory = _.reduce(spendings, (result: any, spending: TransactionModel): any => {
+      if (!result[spending.categoryName]) {
+        result[spending.categoryName] = []
+      }
+
+      result[spending.categoryName].push(spending)
+
+      return result
+    }, {})
+
+    return _.mapValues(spendingsByCategory, (categorySpendings: TransactionModel[]) => {
+      return Math.abs(_.sumBy(categorySpendings, 'amount'))
+    })
+  }, [spendings])
+
+  const spendingDetails = useMemo(() => {
+    return _.reverse(_.sortBy(_.map(_.keys(spendingsByCategorySum), (categoryName) => {
+      return {
+        categoryName,
+        amount: spendingsByCategorySum[categoryName],
+        percentage: _.round(spendingsByCategorySum[categoryName] / totalSpending * 100, 1)
+      }
+    }), 'amount'))
+  }, [spendingsByCategorySum, totalSpending])
+
   return (
     <Flex $direction="column" $gap="16px">
       <button onClick={goToDocumentation}>Go to documentation</button>
@@ -49,9 +87,10 @@ function Main() {
 
       <H1>Spending details</H1>
       <Flex $direction="column" $gap="4px">
-        <CategoryItem icon="FaCartShopping" categoryName="Shopping" amount="256 PLN" percentage="32" backgroundColor="#FDC323"/>
-        <CategoryItem icon="FaBurger" categoryName="Food" amount="156 PLN" percentage="23.8" backgroundColor="#00E396"/>
-        <CategoryItem icon="FaCar" categoryName="Car" amount="100 PLN" percentage="17" backgroundColor="#58BDFF"/>
+        {spendingDetails.map((detail, key) =>
+          <CategoryItem key={key} categoryName={detail.categoryName} amount={detail.amount}
+                        percentage={detail.percentage}/>
+        )}
       </Flex>
 
       <Flex $align="flex-end">
@@ -61,10 +100,9 @@ function Main() {
         <Body2 onClick={() => navigate('/transactions')}>See all</Body2>
       </Flex>
       <Flex $direction="column" $gap="1px" style={{ backgroundColor: theme.theme.divider }}>
-        <TransactionItem icon="FaCartShopping" categoryName="Grocery" date="14 January 2025" amount="-256" backgroundColor="#FDC323"/>
-        <TransactionItem icon="FaBurger" categoryName="McDonald's" date="14 January 2025" amount="-156" backgroundColor="#00E396"/>
-        <TransactionItem icon="FaCar" categoryName="Car" date="13 January 2025" amount="-100" backgroundColor="#58BDFF"/>
-        <TransactionItem icon="FaWallet" categoryName="Salary" date="13 January 2025" amount="5660" backgroundColor="#FF4560"/>
+        {transactions.slice(0, 4).map(({ categoryName, date, amount }: TransactionModel, key: number) =>
+          <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount}/>
+        )}
       </Flex>
 
       <Documentation/>

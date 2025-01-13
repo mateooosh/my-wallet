@@ -4,18 +4,21 @@ import { Flex } from '../styled/flexbox.ts'
 import { Body1, Caption2, H3 } from '../styled/fonts.ts'
 import { formatValue } from '../../utils/utils.ts'
 import { useSelector } from 'react-redux'
+import SettingsModel from '../../models/SettingsModel.ts'
 
 interface Props {
-  icon: string
   categoryName: string
   amount: number
-  backgroundColor: string
   date: string
 }
 
-export function TransactionItem({ icon, categoryName, amount, backgroundColor, date }: Props) {
+export function TransactionItem({ categoryName, amount, date }: Props) {
   const { theme, font } = useTheme()
+
   const currency = useSelector(state => state.currency)
+  const categoriesMap = useSelector(state => SettingsModel.getCategoriesMap(state.categories))
+  const icon: string = useMemo(() => categoriesMap[categoryName].icon, [categoriesMap, categoryName])
+  const backgroundColor: string = useMemo(() => categoriesMap[categoryName].color, [categoriesMap, categoryName])
 
   const [IconComponent, setIconComponent] = useState(null)
 
