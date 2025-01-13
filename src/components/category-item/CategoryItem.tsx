@@ -6,8 +6,8 @@ import SettingsModel from '../../models/SettingsModel.ts'
 
 interface Props {
   categoryName: string
-  amount: number
-  percentage: number
+  amount?: number
+  percentage?: number
 }
 
 export function CategoryItem({ categoryName, amount, percentage }: Props) {
@@ -48,8 +48,8 @@ export function CategoryItem({ categoryName, amount, percentage }: Props) {
         <Body1>{categoryName}</Body1>
       </Flex>
       <Flex $direction="column" $align="flex-end" style={{ zIndex: 2 }}>
-        <Body1>{amount} {currency}</Body1>
-        <Body2>{percentage}%</Body2>
+        {(amount) && <Body1>{amount} {currency}</Body1>}
+        {(percentage) && <Body2>{percentage}%</Body2>}
       </Flex>
 
       <div style={{

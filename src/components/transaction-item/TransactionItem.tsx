@@ -8,17 +8,18 @@ import SettingsModel from '../../models/SettingsModel.ts'
 
 interface Props {
   categoryName: string
-  amount: number
-  date: string
+  amount?: number
+  date?: string
+  backgroundColor?: string
 }
 
-export function TransactionItem({ categoryName, amount, date }: Props) {
+export function TransactionItem({ categoryName, amount = null, date, backgroundColor = null }: Props) {
   const { theme, font } = useTheme()
 
   const currency = useSelector(state => state.currency)
   const categoriesMap = useSelector(state => SettingsModel.getCategoriesMap(state.categories))
   const icon: string = useMemo(() => categoriesMap[categoryName].icon, [categoriesMap, categoryName])
-  const backgroundColor: string = useMemo(() => categoriesMap[categoryName].color, [categoriesMap, categoryName])
+  const iconColor: string = useMemo(() => categoriesMap[categoryName].color, [categoriesMap, categoryName])
 
   const [IconComponent, setIconComponent] = useState(null)
 
@@ -38,8 +39,8 @@ export function TransactionItem({ categoryName, amount, date }: Props) {
   }, [icon])
 
   return (
-    <Flex $gap="8px" $align="center" style={{ backgroundColor: theme.background, padding: '3px 0' }}>
-      {IconComponent ? <Flex $justify="center" $align="center" style={{ height: 30, width: 30, borderRadius: 30, backgroundColor, zIndex: 2 }}><IconComponent size="18px" color="white"/></Flex> : null}
+    <Flex $gap="8px" $align="center" style={{ backgroundColor: backgroundColor || theme.background, padding: '3px 0' }}>
+      {IconComponent ? <Flex $justify="center" $align="center" style={{ height: 30, width: 30, borderRadius: 30, backgroundColor: iconColor, zIndex: 2 }}><IconComponent size="18px" color="white"/></Flex> : null}
       <Flex $direction="column" $grow="1">
         <Body1>{categoryName}</Body1>
         <Caption2 style={{ color: font.secondary }}>{date}</Caption2>
