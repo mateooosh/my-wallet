@@ -45,7 +45,7 @@ export function TransactionItem({ categoryName, amount = null, date, backgroundC
         <Body1>{categoryName}</Body1>
         <Caption2 style={{ color: font.secondary }}>{date}</Caption2>
       </Flex>
-      <H3 style={{ color: amountColor }}>{formatValue(amount)} {currency}</H3>
+      {amount && <H3 style={{ color: amountColor }}>{formatValue(amount)} {currency}</H3>}
     </Flex>
   )
 }
