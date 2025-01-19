@@ -1,5 +1,5 @@
 import { useTheme } from 'styled-components'
-import { Body2 } from '../styled/fonts.ts'
+import { Body2 } from '../styled'
 import { ReactNode } from 'react'
 
 interface Props {

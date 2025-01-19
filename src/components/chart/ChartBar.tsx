@@ -1,6 +1,5 @@
 import { useTheme } from 'styled-components'
-import { Flex } from '../styled/flexbox.ts'
-import { Body1, Body2 } from '../styled/fonts.ts'
+import { Body2, Flex } from '../styled'
 import { useEffect, useMemo, useState } from 'react'
 
 interface Props {

@@ -1,8 +1,6 @@
 import { useTheme } from 'styled-components'
 import { dark, light } from '../../styles/Theme.ts'
-import { Body1, Body2, Caption1, Caption2, H1, H2, H3, H4 } from '../../components/styled/fonts.ts'
-import { Flex } from '../../components/styled/flexbox.ts'
-import { Grid } from '../../components/styled/grid.ts'
+import { Body1, Body2, Caption1, Caption2, H1, H2, H3, H4, Flex, Grid } from '../../components/styled'
 import * as _ from 'lodash'
 import { Fragment, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -43,7 +41,7 @@ function IconRenderer({ category }) {
 
 function Documentation() {
   const theme = useTheme()
-  const categories = useSelector(state => state.categories)
+  const categories = useSelector(({ settings }) => settings.categories)
 
   return (
     <Flex $direction="column" $gap="16px">

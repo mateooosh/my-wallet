@@ -1,10 +1,10 @@
 import { useTheme } from 'styled-components'
-import { Flex } from '../styled/flexbox.ts'
-import { Body1, Body2 } from '../styled/fonts.ts'
+import { Body2, Flex } from '../styled'
 import { ChartBar } from './ChartBar.tsx'
 import { ChartLimit } from './chartLimit.ts'
 import { useMemo } from 'react'
 import * as _ from 'lodash'
+import { useSelector } from 'react-redux'
 
 interface DataSourceItem {
   value: number
@@ -15,10 +15,11 @@ interface Props {
   dataSource: Array<DataSourceItem>
 }
 
-const LIMIT = 600
 
 export function Chart({ dataSource }: Props) {
   const { theme } = useTheme()
+
+  const limit = useSelector(({ settings }) => settings.limit)
 
   const generateYAxisLabels = (maxValue: number): number[]  => {
     const numberOfSteps: number = 4
@@ -26,7 +27,7 @@ export function Chart({ dataSource }: Props) {
     return _.reverse(_.range(numberOfSteps).map(i => Math.round(i * step)))
   }
 
-  const max = useMemo(() => _.max([_.maxBy(dataSource, 'value').value, LIMIT]), [dataSource])
+  const max = useMemo(() => _.max([_.maxBy(dataSource, 'value').value, limit]), [dataSource])
 
   const yAxis: number[] = useMemo(() => {
     return generateYAxisLabels(max)
@@ -42,9 +43,9 @@ export function Chart({ dataSource }: Props) {
       </Flex>
       <Flex $gap="16px" $grow="1" style={{ position: 'relative' }}>
         {dataSource.map((item: DataSourceItem, key: number) =>
-          <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={LIMIT}/>
+          <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={limit}/>
         )}
-        <ChartLimit $limitHeight={LIMIT / max * 100}/>
+        <ChartLimit $limitHeight={limit / max * 100}/>
       </Flex>
     </Flex>
   )

@@ -1,16 +1,14 @@
-import { Summary } from '../../components/summary/Summary.tsx'
-import { Body2, H1 } from '../../components/styled/fonts.ts'
-import { Flex } from '../../components/styled/flexbox.ts'
+import { CategoryItem, Chart, Summary, TransactionItem } from '../../components'
+import { Body2, Flex, H1 } from '../../components/styled'
 import { useTheme } from 'styled-components'
-import { Chart } from '../../components/chart/Chart.tsx'
-import { CategoryItem } from '../../components/category-item/CategoryItem.tsx'
-import { TransactionItem } from '../../components/transaction-item/TransactionItem.tsx'
 import Documentation from '../documentation/Documentation.tsx'
 import { useNavigate } from 'react-router-dom'
 import { useMemo } from 'react'
-import { transactions } from '../../mocks/mocks.ts'
 import * as _ from 'lodash'
 import TransactionModel from '../../models/TransactionModel.ts'
+import { useSelector } from 'react-redux'
+import { Button } from 'antd'
+import { getCurrentMonthBalance, getTransactionsSumForLast4Months } from '../../store/TransactionsStore.ts'
 
 const dataSource = [
   {
@@ -35,8 +33,19 @@ function Main() {
   const theme = useTheme()
   const navigate = useNavigate()
 
+  const transactions = useSelector(({ transactions }) => transactions)
+  const transactionsSumForLast4Months = useSelector(getTransactionsSumForLast4Months)
+
   const goToDocumentation = (): void => {
     navigate('/documentation')
+  }
+
+  const addTransaction = (): void => {
+    navigate('/transaction')
+  }
+
+  const clearStorage = (): void => {
+    localStorage.clear()
   }
 
   const spendings: TransactionModel[] = useMemo(() => {
@@ -74,8 +83,10 @@ function Main() {
   }, [spendingsByCategorySum, totalSpending])
 
   return (
-    <Flex $direction="column" $gap="16px">
-      <button onClick={goToDocumentation}>Go to documentation</button>
+    <Flex $direction="column" $gap="16px" style={{ padding: 20 }}>
+      <Button onClick={goToDocumentation}>Go to documentation</Button>
+      <Button onClick={addTransaction}>Add transaction</Button>
+      <Button onClick={clearStorage}>Clear storage</Button>
       <Summary/>
       {/*<Flex $align="center" $justify="center" $gap="16px">*/}
       {/*  <FaAngleLeft color="grey"/>*/}
@@ -83,7 +94,7 @@ function Main() {
       {/*  <FaAngleRight color="grey"/>*/}
       {/*</Flex>*/}
       <H1>Spending breakdown</H1>
-      <Chart dataSource={dataSource}/>
+      <Chart dataSource={transactionsSumForLast4Months}/>
 
       <H1>Spending details</H1>
       <Flex $direction="column" $gap="4px">
@@ -100,7 +111,7 @@ function Main() {
         <Body2 onClick={() => navigate('/transactions')}>See all</Body2>
       </Flex>
       <Flex $direction="column" $gap="1px" style={{ backgroundColor: theme.theme.divider }}>
-        {transactions.slice(0, 4).map(({ categoryName, date, amount }: TransactionModel, key: number) =>
+        {transactions.slice(0, 5).map(({ categoryName, date, amount }: TransactionModel, key: number) =>
           <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount}/>
         )}
       </Flex>

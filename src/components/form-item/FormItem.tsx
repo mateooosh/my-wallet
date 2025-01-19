@@ -1,6 +1,5 @@
 import { ReactNode } from 'react'
-import { Flex } from '../styled/flexbox.ts'
-import { Body1 } from '../styled/fonts.ts'
+import { Body1, Flex } from '../styled'
 
 interface Props {
   label: string

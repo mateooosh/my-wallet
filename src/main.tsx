@@ -8,7 +8,9 @@ import Transactions from './views/transactions/Transactions.tsx'
 import { DefaultTheme, ThemeProvider } from 'styled-components'
 import { dark, light } from './styles/Theme.ts'
 import { Provider, useDispatch, useSelector } from 'react-redux'
-import settingsStore from './store/SettingsStore.ts'
+import EditTransaction from './views/edit-transaction/EditTransaction.tsx'
+import store from './store/store.ts'
+import { Button } from 'antd'
 
 const router = createBrowserRouter([
   {
@@ -22,11 +24,15 @@ const router = createBrowserRouter([
   {
     path: '/transactions',
     element: <Transactions/>
+  },
+  {
+    path: '/transaction',
+    element: <EditTransaction/>
   }
 ])
 
 const AppThemeProvider = ({ children }) => {
-  const darkMode = useSelector(state => state.darkMode)
+  const darkMode = useSelector(({ settings }) => settings.darkMode)
   const dispatch = useDispatch()
 
   const toggleTheme = (): void => {
@@ -38,15 +44,14 @@ const AppThemeProvider = ({ children }) => {
   return (
     <ThemeProvider theme={theme}>
       <div style={{
-        padding: 20,
         height: '100%',
         backgroundColor: theme.theme.background,
         color: theme.font.primary,
         overflow: 'auto'
       }}>
-        <button onClick={toggleTheme}>
+        <Button onClick={toggleTheme}>
           Switch to {darkMode ? 'Light' : 'Dark'} Mode
-        </button>
+        </Button>
         {children}
       </div>
     </ThemeProvider>
@@ -55,7 +60,7 @@ const AppThemeProvider = ({ children }) => {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <Provider store={settingsStore}>
+    <Provider store={store}>
       <AppThemeProvider>
         <RouterProvider router={router}/>
       </AppThemeProvider>

@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Flex } from '../styled/flexbox.ts'
-import { Body1, Body2 } from '../styled/fonts.ts'
+import { Body1, Body2, Flex } from '../styled'
 import { useSelector } from 'react-redux'
 import SettingsModel from '../../models/SettingsModel.ts'
+import { useTheme } from 'styled-components'
 
 interface Props {
   categoryName: string
@@ -11,10 +11,12 @@ interface Props {
 }
 
 export function CategoryItem({ categoryName, amount, percentage }: Props) {
-  const currency = useSelector(state => state.currency)
-  const categoriesMap = useSelector(state => SettingsModel.getCategoriesMap(state.categories))
-  const icon: string = useMemo(() => categoriesMap[categoryName].icon, [categoriesMap, categoryName])
-  const backgroundColor: string = useMemo(() => categoriesMap[categoryName].color, [categoriesMap, categoryName])
+  const { theme } = useTheme()
+
+  const currency = useSelector(({ settings }) => settings.currency)
+  const categoriesMap = useSelector(({ settings }) => SettingsModel.getCategoriesMap(settings.categories))
+  const icon: string = useMemo(() => categoriesMap[categoryName]?.icon || 'FaQuestion', [categoriesMap, categoryName])
+  const backgroundColor: string = useMemo(() => categoriesMap[categoryName]?.color || theme.primary, [categoriesMap, categoryName])
 
   const [IconComponent, setIconComponent] = useState(null)
   const [animatedPercentage, setAnimatedPercentage] = useState(0)
@@ -28,7 +30,6 @@ export function CategoryItem({ categoryName, amount, percentage }: Props) {
         console.error(`Error loading icon ${icon}:`, error)
       }
     }
-
     loadIcon()
   }, [icon])
 

@@ -1,7 +1,6 @@
 import { useTheme } from 'styled-components'
 import { useEffect, useMemo, useState } from 'react'
-import { Flex } from '../styled/flexbox.ts'
-import { Body1, Caption2, H3 } from '../styled/fonts.ts'
+import { Body1, Caption2, H3, Flex } from '../styled'
 import { formatValue } from '../../utils/utils.ts'
 import { useSelector } from 'react-redux'
 import SettingsModel from '../../models/SettingsModel.ts'
@@ -16,10 +15,10 @@ interface Props {
 export function TransactionItem({ categoryName, amount = null, date, backgroundColor = null }: Props) {
   const { theme, font } = useTheme()
 
-  const currency = useSelector(state => state.currency)
-  const categoriesMap = useSelector(state => SettingsModel.getCategoriesMap(state.categories))
-  const icon: string = useMemo(() => categoriesMap[categoryName].icon, [categoriesMap, categoryName])
-  const iconColor: string = useMemo(() => categoriesMap[categoryName].color, [categoriesMap, categoryName])
+  const currency = useSelector(({ settings }) => settings.currency)
+  const categoriesMap = useSelector(({ settings }) => SettingsModel.getCategoriesMap(settings.categories))
+  const icon: string = useMemo(() => categoriesMap[categoryName]?.icon || 'FaQuestion', [categoriesMap, categoryName])
+  const iconColor: string = useMemo(() => categoriesMap[categoryName]?.color || theme.primary, [categoriesMap, categoryName])
 
   const [IconComponent, setIconComponent] = useState(null)
 
