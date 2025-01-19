@@ -20,6 +20,8 @@ const defaultCategories: CategoryModel[] = [
 // 8B4513
 // 2979FF
 
+const defaultLimit = 600
+
 export default class SettingsModel {
   darkMode: boolean
   categories: CategoryModel[]
@@ -29,7 +31,7 @@ export default class SettingsModel {
   constructor(darkMode: boolean, categories: CategoryModel[], limit: number, currency: string) {
     this.darkMode = darkMode || false
     this.categories = categories || defaultCategories
-    this.limit = limit || 700
+    this.limit = limit || defaultLimit
     this.currency = currency || 'PLN'
   }
 
@@ -41,7 +43,7 @@ export default class SettingsModel {
     return {
       darkMode: json.darkMode || false,
       categories: json.categories || defaultCategories,
-      limit: json.limit || 700,
+      limit: json.limit || defaultLimit,
       currency: json.currency || 'PLN'
     }
   }
