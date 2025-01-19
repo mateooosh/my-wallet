@@ -43,17 +43,17 @@ function EditTransaction() {
     }))
   }
 
-  const onDateChange = (date): void => {
-    setTransaction(prevTransaction => ({
-      ...prevTransaction,
-      date: dd_mm_yyyy(date)
-    }))
-  }
-
   const onAmountChange = (amount: number): void => {
     setTransaction(prevTransaction => ({
       ...prevTransaction,
       amount: -amount
+    }))
+  }
+
+  const onDateChange = (date): void => {
+    setTransaction(prevTransaction => ({
+      ...prevTransaction,
+      date: dd_mm_yyyy(date)
     }))
   }
 
@@ -84,13 +84,13 @@ function EditTransaction() {
                   optionRender={optionRender}/>
         </FormItem>
 
-        <FormItem label="Date">
-          <DatePicker onChange={onDateChange} size="large" defaultValue={parseToDayJS(transaction.date)}/>
-        </FormItem>
-
         <FormItem label="Amount">
           <InputNumber onChange={onAmountChange} size="large" min={-1000000} max={1000000} type="number"
                        suffix={currency} prefix="-" controls={false} style={{ width: '100%' }}/>
+        </FormItem>
+
+        <FormItem label="Date">
+          <DatePicker onChange={onDateChange} size="large" defaultValue={parseToDayJS(transaction.date)}/>
         </FormItem>
 
         <FormItem label="Description">
