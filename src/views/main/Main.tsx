@@ -37,11 +37,11 @@ function Main() {
   const transactionsSumForLast4Months = useSelector(getTransactionsSumForLast4Months)
 
   const goToDocumentation = (): void => {
-    navigate('/documentation')
+    navigate('/my-wallet/documentation')
   }
 
   const addTransaction = (): void => {
-    navigate('/transaction')
+    navigate('/my-wallet/transaction')
   }
 
   const clearStorage = (): void => {
@@ -108,7 +108,7 @@ function Main() {
         <Flex $grow="1">
           <H1>Last transactions</H1>
         </Flex>
-        <Body2 onClick={() => navigate('/transactions')}>See all</Body2>
+        <Body2 onClick={() => navigate('/my-wallet/transactions')}>See all</Body2>
       </Flex>
       <Flex $direction="column" $gap="1px" style={{ backgroundColor: theme.theme.divider }}>
         {transactions.slice(0, 5).map(({ categoryName, date, amount }: TransactionModel, key: number) =>

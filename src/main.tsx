@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom'
 import Main from './views/main/Main'
 import Documentation from './views/documentation/Documentation.tsx'
 import Transactions from './views/transactions/Transactions.tsx'
@@ -15,18 +15,22 @@ import { Button } from 'antd'
 const router = createBrowserRouter([
   {
     path: '/',
+    loader: () => redirect('/my-wallet')
+  },
+  {
+    path: '/my-wallet',
     element: <Main/>
   },
   {
-    path: '/documentation',
+    path: '/my-wallet/documentation',
     element: <Documentation/>
   },
   {
-    path: '/transactions',
+    path: '/my-wallet/transactions',
     element: <Transactions/>
   },
   {
-    path: '/transaction',
+    path: '/my-wallet/transaction',
     element: <EditTransaction/>
   }
 ])

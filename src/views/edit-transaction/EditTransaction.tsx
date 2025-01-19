@@ -70,7 +70,7 @@ function EditTransaction() {
 
   const onSave = () => {
     dispatch({ type: 'transactions/addTransaction', payload: TransactionModel.toJSON(transaction) })
-    navigate('/')
+    navigate('/my-wallet')
   }
 
   return (
