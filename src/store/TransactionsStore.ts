@@ -1,21 +1,44 @@
 import { createSlice } from '@reduxjs/toolkit'
 import TransactionModel from '../models/TransactionModel.ts'
 import _ from 'lodash'
-import { transactions } from '../mocks/mocks.ts'
 import { getLast4Months, sortByDate } from '../utils/utils.ts'
 
-const STORAGE_KEY = 'transactions'
+const STORAGE_KEY = 'my-wallet|transactions'
+
+const transactions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
 
 const transactionsSlice = createSlice({
   name: 'transactions',
-  initialState: _.map(transactions, TransactionModel.toJSON),
+  initialState: transactions,
   // initialState: JSON.parse(localStorage.getItem(STORAGE_KEY)) || [],
   reducers: {
     addTransaction: (state, { payload }) => {
-      return [payload, ...state].sort(sortByDate)
+      const result = [payload, ...state].sort(sortByDate)
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(result))
+      return result
+    },
+
+    editTransaction: (state, { payload }) => {
+      const index: number = _.findIndex(state, ['id', payload.id])
+      const result = [...state]
+      result[index] = payload
+      return result
+    },
+
+    clearState: () => {
+      localStorage.removeItem(STORAGE_KEY)
+      return []
     }
   }
 })
+
+export const getNewTransactionID = (state): number => {
+  return (_.maxBy(state.transactions, 'id')?.id + 1) || 0
+}
+
+export const getTransactionByID = (state: any, id: number): TransactionModel => {
+  return _.find(state.transactions, ['id', id]) as TransactionModel
+}
 
 export const getMappedTransactions = (state): { [key: string]: { [key: string]: TransactionModel[] } } => {
   const groupedByYear = _.groupBy(state.transactions, (transaction: TransactionModel) => _.split(transaction.date, '-')[2])

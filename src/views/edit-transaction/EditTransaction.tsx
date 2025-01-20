@@ -8,16 +8,22 @@ import * as _ from 'lodash'
 import CategoryModel from '../../models/CategoryModel.ts'
 import { useMemo, useState } from 'react'
 import { dd_mm_yyyy, parseToDayJS } from '../../utils/utils.ts'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getNewTransactionID, getTransactionByID } from '../../store/TransactionsStore.ts'
 
 const { TextArea } = Input
 
 function EditTransaction() {
+  const { id } = useParams()
+
   const theme = useTheme()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const [transaction, setTransaction] = useState(new TransactionModel(''))
+  const newTransactionID = useSelector(getNewTransactionID)
+  const transactionToEdit: TransactionModel = useSelector((state) => getTransactionByID(state, _.toNumber(id)))
+
+  const [transaction, setTransaction] = useState(id ? transactionToEdit : new TransactionModel(newTransactionID))
 
   const categories = useSelector(({ settings }) => settings.categories)
   const currency = useSelector(({ settings }) => settings.currency)
@@ -69,7 +75,8 @@ function EditTransaction() {
   }, [transaction])
 
   const onSave = () => {
-    dispatch({ type: 'transactions/addTransaction', payload: TransactionModel.toJSON(transaction) })
+    const actionType: string = id ? 'transactions/editTransaction' : 'transactions/addTransaction'
+    dispatch({ type: actionType, payload: TransactionModel.toJSON(transaction) })
     navigate('/my-wallet')
   }
 
@@ -79,14 +86,16 @@ function EditTransaction() {
       <Flex $direction="column" $gap="8px" style={{ padding: 20 }}>
         <FormItem label="Category">
           <Select size="large"
+                  value={transaction.categoryName}
                   onChange={onCategoryChange}
                   options={categoriesDataSource}
                   optionRender={optionRender}/>
         </FormItem>
 
         <FormItem label="Amount">
-          <InputNumber onChange={onAmountChange} size="large" min={-1000000} max={1000000} type="number"
-                       suffix={currency} prefix="-" controls={false} style={{ width: '100%' }}/>
+          <InputNumber value={Math.abs(transaction.amount)} onChange={onAmountChange}
+                       size="large" min={-1000000} max={1000000} type="number" suffix={currency} prefix="-"
+                       controls={false} style={{ width: '100%' }}/>
         </FormItem>
 
         <FormItem label="Date">
@@ -94,7 +103,8 @@ function EditTransaction() {
         </FormItem>
 
         <FormItem label="Description">
-          <TextArea onChange={onDescriptionChange} size="large" autoSize={{ minRows: 2, maxRows: 2 }}/>
+          <TextArea value={transaction.description} onChange={onDescriptionChange} size="large"
+                    autoSize={{ minRows: 2, maxRows: 2 }}/>
         </FormItem>
 
         <Button onClick={onSave} disabled={!canSave} type="primary" size="large"

@@ -6,32 +6,14 @@ import { useNavigate } from 'react-router-dom'
 import { useMemo } from 'react'
 import * as _ from 'lodash'
 import TransactionModel from '../../models/TransactionModel.ts'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'antd'
-import { getCurrentMonthBalance, getTransactionsSumForLast4Months } from '../../store/TransactionsStore.ts'
-
-const dataSource = [
-  {
-    value: 720,
-    label: "Jul"
-  },
-  {
-    value: 935,
-    label: "Aug"
-  },
-  {
-    value: 550,
-    label: "Sep"
-  },
-  {
-    value: 300,
-    label: "Oct"
-  }
-]
+import { getTransactionsSumForLast4Months } from '../../store/TransactionsStore.ts'
 
 function Main() {
   const theme = useTheme()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const transactions = useSelector(({ transactions }) => transactions)
   const transactionsSumForLast4Months = useSelector(getTransactionsSumForLast4Months)
@@ -45,7 +27,8 @@ function Main() {
   }
 
   const clearStorage = (): void => {
-    localStorage.clear()
+    dispatch({ type: 'transactions/clearState' })
+    dispatch({ type: 'settings/clearState' })
   }
 
   const spendings: TransactionModel[] = useMemo(() => {
@@ -111,8 +94,8 @@ function Main() {
         <Body2 onClick={() => navigate('/my-wallet/transactions')}>See all</Body2>
       </Flex>
       <Flex $direction="column" $gap="1px" style={{ backgroundColor: theme.theme.divider }}>
-        {transactions.slice(0, 5).map(({ categoryName, date, amount }: TransactionModel, key: number) =>
-          <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount}/>
+        {transactions.slice(0, 5).map(({ categoryName, date, amount, id }: TransactionModel, key: number) =>
+          <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount} id={id}/>
         )}
       </Flex>
 

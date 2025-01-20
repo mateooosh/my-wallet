@@ -6,6 +6,8 @@ interface FlexProps {
   $align?: boolean
   $gap?: string
   $grow?: string
+  $shrink?: string
+  $basis?: string
   $alignself?: string
   $wrap?: string
 }
@@ -17,6 +19,8 @@ export const Flex = styled.div<FlexProps>`
   align-items: ${({ $align }) => $align || 'normal'};
   gap: ${({ $gap }) => $gap || '0'};
   flex-grow: ${({ $grow }) => $grow || '0'};
+  flex-shrink: ${({ $shrink }) => $shrink || '1'};
+  flex-basis: ${({ $basis }) => $basis || 'auto'};
   align-self: ${({ $alignself }) => $alignself || 'auto'};
   flex-wrap: ${({ $wrap }) => $wrap || 'nowrap'};
 `

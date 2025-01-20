@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import SettingsModel from '../models/SettingsModel.ts'
 
-const STORAGE_KEY = 'settings'
+const STORAGE_KEY = 'my-wallet|settings'
 
 const settingsSlice = createSlice({
   name: 'settings',
@@ -10,6 +10,10 @@ const settingsSlice = createSlice({
     toggleDarkMode: state => {
       state.darkMode = !state.darkMode
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    },
+    clearState: () => {
+      localStorage.removeItem(STORAGE_KEY)
+      return SettingsModel.toJSON(SettingsModel.fromJSON({}))
     }
   }
 })

@@ -2,7 +2,9 @@ import styled from 'styled-components'
 
 interface ChartLimitProps {
   $limitHeight?: number,
-  theme: any
+  $height?: number,
+  $background?: string,
+  // theme: any
 }
 
 export const ChartLimit = styled.div<ChartLimitProps>`
@@ -10,10 +12,10 @@ export const ChartLimit = styled.div<ChartLimitProps>`
   bottom: ${({ $limitHeight }) => ($limitHeight) + '%'};
   left: -8px;
   //right: -8px;
-  height: 2px;
+  height: ${({ $height }) => ($height) + 'px'};
   width: calc(100% + 16px);
   border-radius: 6px;
-  background-color: ${({ theme }) => theme.theme.danger};
+  background-color: ${({ $background }) => $background};
   z-index: 0;
   //animation: example 2s;
 

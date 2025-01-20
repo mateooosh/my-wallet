@@ -21,7 +21,7 @@ export function Summary() {
       <Body2 style={{ color: 'white' }}>Total spendings</Body2>
       <Flex $align="flex-end" $gap="4px" style={{ padding: '3px 0 7px', color: 'white' }}>
         <H1>{currentMonthBalance} / {limit}</H1>
-        <Body2>{currency} per month</Body2>
+        <Body2>{currency} current month</Body2>
       </Flex>
       <ProgressBar value={progressValue}/>
     </div>

@@ -30,7 +30,7 @@ const router = createBrowserRouter([
     element: <Transactions/>
   },
   {
-    path: '/my-wallet/transaction',
+    path: '/my-wallet/transaction/:id?',
     element: <EditTransaction/>
   }
 ])

@@ -76,7 +76,12 @@ export function Chart({ dataSource }: Props) {
         {dataSource.map((item: DataSourceItem, key: number) =>
           <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={limit}/>
         )}
-        <ChartLimit $limitHeight={limit / max * 100}/>
+        {yAxis.map((value: number, key: number) =>
+          <ChartLimit key={key}
+                      $limitHeight={value / max * 100}
+                      $height={value === limit ? 2 : 1}
+                      $background={value === limit ? theme.danger : theme.divider}/>
+        )}
       </Flex>
     </Flex>
   )
