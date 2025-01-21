@@ -1,7 +1,6 @@
 import { CategoryItem, Chart, Summary, TransactionItem } from '../../components'
 import { Body2, Flex, H1 } from '../../components/styled'
 import { useTheme } from 'styled-components'
-import Documentation from '../documentation/Documentation.tsx'
 import { useNavigate } from 'react-router-dom'
 import { useMemo } from 'react'
 import * as _ from 'lodash'
@@ -71,11 +70,6 @@ function Main() {
       <Button onClick={addTransaction}>Add transaction</Button>
       <Button onClick={clearStorage}>Clear storage</Button>
       <Summary/>
-      {/*<Flex $align="center" $justify="center" $gap="16px">*/}
-      {/*  <FaAngleLeft color="grey"/>*/}
-      {/*  <H2 style={{ color: 'grey', textAlign: 'center' }}>March 2024</H2>*/}
-      {/*  <FaAngleRight color="grey"/>*/}
-      {/*</Flex>*/}
       <H1>Spending breakdown</H1>
       <Chart dataSource={transactionsSumForLast4Months}/>
 
@@ -94,12 +88,10 @@ function Main() {
         <Body2 onClick={() => navigate('/my-wallet/transactions')}>See all</Body2>
       </Flex>
       <Flex $direction="column" $gap="1px" style={{ backgroundColor: theme.theme.divider }}>
-        {transactions.slice(0, 5).map(({ categoryName, date, amount, id }: TransactionModel, key: number) =>
-          <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount} id={id}/>
+        {transactions.slice(0, 5).map(({ categoryName, date, amount, description, id }: TransactionModel, key: number) =>
+          <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount} description={description} id={id}/>
         )}
       </Flex>
-
-      <Documentation/>
     </Flex>
   )
 }

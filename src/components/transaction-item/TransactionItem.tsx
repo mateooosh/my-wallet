@@ -11,11 +11,12 @@ interface Props {
   categoryName: string
   amount?: number
   date?: string
+  description?: string
   backgroundColor?: string
-  id?: string
+  id?: number
 }
 
-export function TransactionItem({ categoryName, amount = null, date, backgroundColor = null, id }: Props) {
+export function TransactionItem({ categoryName, amount = null, date, description, backgroundColor = null, id }: Props) {
   const { theme, font } = useTheme()
   const navigate = useNavigate()
 
@@ -54,7 +55,7 @@ export function TransactionItem({ categoryName, amount = null, date, backgroundC
         <IconComponent size="18px" color="white"/></Flex> : null
       }
       <Flex $direction="column" $grow="1">
-        <Body1>{categoryName}</Body1>
+        <Body1>{description || categoryName}</Body1>
         <Caption2 style={{ color: font.secondary }}>{date}</Caption2>
       </Flex>
       {amount && <H3 style={{ color: amountColor }}>{formatValue(amount)} {currency}</H3>}

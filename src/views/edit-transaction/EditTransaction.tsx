@@ -23,7 +23,7 @@ function EditTransaction() {
   const newTransactionID = useSelector(getNewTransactionID)
   const transactionToEdit: TransactionModel = useSelector((state) => getTransactionByID(state, _.toNumber(id)))
 
-  const [transaction, setTransaction] = useState(id ? transactionToEdit : new TransactionModel(newTransactionID))
+  const [transaction, setTransaction] = useState(_.isNil(id) ? new TransactionModel(newTransactionID) : transactionToEdit)
 
   const categories = useSelector(({ settings }) => settings.categories)
   const currency = useSelector(({ settings }) => settings.currency)
@@ -80,9 +80,11 @@ function EditTransaction() {
     navigate('/my-wallet')
   }
 
+  const navBarLabel: string = useMemo(() => _.isNil(id) ? 'Add transaction' : 'Edit transaction', [id])
+
   return (
     <div>
-      <NavBar label="Add transaction"/>
+      <NavBar label={navBarLabel}/>
       <Flex $direction="column" $gap="8px" style={{ padding: 20 }}>
         <FormItem label="Category">
           <Select size="large"

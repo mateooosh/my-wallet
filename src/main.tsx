@@ -11,6 +11,8 @@ import { Provider, useDispatch, useSelector } from 'react-redux'
 import EditTransaction from './views/edit-transaction/EditTransaction.tsx'
 import store from './store/store.ts'
 import { Button } from 'antd'
+import { Body1, Body2, Flex } from './components/styled'
+import { FaCirclePlus, FaGear, FaHouse } from 'react-icons/fa6'
 
 const router = createBrowserRouter([
   {
@@ -48,15 +50,32 @@ const AppThemeProvider = ({ children }) => {
   return (
     <ThemeProvider theme={theme}>
       <div style={{
-        height: '100%',
         backgroundColor: theme.theme.background,
         color: theme.font.primary,
-        overflow: 'auto'
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100dvh'
       }}>
         <Button onClick={toggleTheme}>
           Switch to {darkMode ? 'Light' : 'Dark'} Mode
         </Button>
-        {children}
+        <div style={{ overflow: 'auto', flex: 1 }}>
+          {children}
+        </div>
+        <Flex style={{ padding: '8px 0', borderTop: '1px solid ' + theme.theme.divider }}>
+          <Flex $direction="column" $justify="center" $align="center" $grow="1" $shrink="1" $basis="0">
+            <FaHouse size="24px" color={theme.font.secondary}/>
+            <Body1>Home</Body1>
+          </Flex>
+          <Flex $direction="column" $justify="center" $align="center"  $grow="1" $shrink="1" $basis="0">
+            <FaCirclePlus size="24px" color={theme.font.secondary}/>
+            <Body1>Add</Body1>
+          </Flex>
+          <Flex $direction="column" $justify="center" $align="center"  $grow="1" $shrink="1" $basis="0">
+            <FaGear size="24px" color={theme.font.secondary}/>
+            <Body1>Settings</Body1>
+          </Flex>
+        </Flex>
       </div>
     </ThemeProvider>
   )
