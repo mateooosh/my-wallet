@@ -21,10 +21,6 @@ function Main() {
     navigate('/my-wallet/documentation')
   }
 
-  const addTransaction = (): void => {
-    navigate('/my-wallet/transaction')
-  }
-
   const clearStorage = (): void => {
     dispatch({ type: 'transactions/clearState' })
     dispatch({ type: 'settings/clearState' })
@@ -67,7 +63,6 @@ function Main() {
   return (
     <Flex $direction="column" $gap="16px" style={{ padding: 20 }}>
       <Button onClick={goToDocumentation}>Go to documentation</Button>
-      <Button onClick={addTransaction}>Add transaction</Button>
       <Button onClick={clearStorage}>Clear storage</Button>
       <Summary/>
       <H1>Spending breakdown</H1>

@@ -2,14 +2,15 @@ import { useTheme } from 'styled-components'
 import { Body1, Flex } from '../../components/styled'
 import { FormItem, NavBar, TransactionItem } from '../../components'
 import TransactionModel from '../../models/TransactionModel.ts'
-import { Button, DatePicker, Input, InputNumber, Select } from 'antd'
+import { AutoComplete, Button, DatePicker, Input, InputNumber, Select } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import * as _ from 'lodash'
 import CategoryModel from '../../models/CategoryModel.ts'
 import { useMemo, useState } from 'react'
 import { dd_mm_yyyy, parseToDayJS } from '../../utils/utils.ts'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getNewTransactionID, getTransactionByID } from '../../store/TransactionsStore.ts'
+import { getAllUniqDescriptions, getNewTransactionID, getTransactionByID } from '../../store/TransactionsStore.ts'
+import './edit-transaction.css'
 
 const { TextArea } = Input
 
@@ -27,6 +28,7 @@ function EditTransaction() {
 
   const categories = useSelector(({ settings }) => settings.categories)
   const currency = useSelector(({ settings }) => settings.currency)
+  const descriptionOptions = useSelector(getAllUniqDescriptions)
 
   const categoriesDataSource = useMemo(() => {
     return _.map(categories, (category: CategoryModel) => {
@@ -63,12 +65,16 @@ function EditTransaction() {
     }))
   }
 
-  const onDescriptionChange = (event: any): void => {
+  const onDescriptionChange = (description: any): void => {
     setTransaction(prevTransaction => ({
       ...prevTransaction,
-      description: event.target.value
+      description
     }))
   }
+
+  const autoCompleteFilter = ((inputValue, option) => {
+    return option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+  })
 
   const canSave: boolean = useMemo(() => {
     return !!(transaction.categoryName && transaction.date && transaction.amount)
@@ -105,8 +111,11 @@ function EditTransaction() {
         </FormItem>
 
         <FormItem label="Description">
-          <TextArea value={transaction.description} onChange={onDescriptionChange} size="large"
-                    autoSize={{ minRows: 2, maxRows: 2 }}/>
+          <AutoComplete value={transaction.description} onChange={onDescriptionChange} size="large"
+                        options={descriptionOptions} filterOption={autoCompleteFilter}
+          />
+          {/*<TextArea value={transaction.description} onChange={onDescriptionChange} size="large"*/}
+          {/*          autoSize={{ minRows: 2, maxRows: 2 }}/>*/}
         </FormItem>
 
         <Button onClick={onSave} disabled={!canSave} type="primary" size="large"

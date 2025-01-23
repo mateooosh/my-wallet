@@ -81,4 +81,10 @@ export const getCurrentMonthBalance = (state): number => {
   }, 0)
 }
 
+export const getAllUniqDescriptions = (state) => {
+  return _.map(_.uniq(_.map(state.transactions, 'description')).sort(), (description) => {
+    return { value: description }
+  })
+}
+
 export default transactionsSlice.reducer

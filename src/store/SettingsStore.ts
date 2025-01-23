@@ -11,6 +11,10 @@ const settingsSlice = createSlice({
       state.darkMode = !state.darkMode
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
     },
+    setLimit: (state, { payload }) => {
+      state.limit = payload
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    },
     clearState: () => {
       localStorage.removeItem(STORAGE_KEY)
       return SettingsModel.toJSON(SettingsModel.fromJSON({}))
