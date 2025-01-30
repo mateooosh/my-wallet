@@ -7,10 +7,9 @@ import Documentation from './views/documentation/Documentation.tsx'
 import Transactions from './views/transactions/Transactions.tsx'
 import { DefaultTheme, ThemeProvider, useTheme } from 'styled-components'
 import { dark, light } from './styles/Theme.ts'
-import { Provider, useDispatch, useSelector } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
 import EditTransaction from './views/edit-transaction/EditTransaction.tsx'
 import store from './store/store.ts'
-import { Button } from 'antd'
 import { BottomBar } from './components'
 import Settings from './views/settings/Settings.tsx'
 
@@ -49,10 +48,6 @@ const router = createBrowserRouter([
         element: <Main/>
       },
       {
-        path: '/my-wallet/documentation',
-        element: <Documentation/>
-      },
-      {
         path: '/my-wallet/transactions',
         element: <Transactions/>
       },
@@ -62,7 +57,17 @@ const router = createBrowserRouter([
       },
       {
         path: '/my-wallet/settings',
-        element: <Settings/>
+        element: <Outlet/>,
+        children: [
+          {
+            path: '',
+            element: <Settings/>
+          },
+          {
+            path: '/my-wallet/settings/documentation',
+            element: <Documentation/>
+          }
+        ]
       }
     ]
   }

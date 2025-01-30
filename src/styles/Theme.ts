@@ -19,7 +19,7 @@ export const dark: DefaultTheme = {
   font: {
     primary: '#EAEAEA',
     secondary: '#B3B3B3',
-    tertiary: '#8C8C8C',
+    tertiary: '#737373',
   },
   theme: {
     primary: '#00785D',

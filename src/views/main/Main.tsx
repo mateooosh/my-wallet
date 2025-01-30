@@ -5,26 +5,15 @@ import { useNavigate } from 'react-router-dom'
 import { useMemo } from 'react'
 import * as _ from 'lodash'
 import TransactionModel from '../../models/TransactionModel.ts'
-import { useDispatch, useSelector } from 'react-redux'
-import { Button } from 'antd'
+import { useSelector } from 'react-redux'
 import { getTransactionsSumForLast4Months } from '../../store/TransactionsStore.ts'
 
 function Main() {
   const theme = useTheme()
   const navigate = useNavigate()
-  const dispatch = useDispatch()
 
   const transactions = useSelector(({ transactions }) => transactions)
   const transactionsSumForLast4Months = useSelector(getTransactionsSumForLast4Months)
-
-  const goToDocumentation = (): void => {
-    navigate('/my-wallet/documentation')
-  }
-
-  const clearStorage = (): void => {
-    dispatch({ type: 'transactions/clearState' })
-    dispatch({ type: 'settings/clearState' })
-  }
 
   const spendings: TransactionModel[] = useMemo(() => {
     return _.filter(transactions, (transaction: TransactionModel): boolean => transaction.amount < 0)
@@ -62,8 +51,6 @@ function Main() {
 
   return (
     <Flex $direction="column" $gap="16px" style={{ padding: 20 }}>
-      <Button onClick={goToDocumentation}>Go to documentation</Button>
-      <Button onClick={clearStorage}>Clear storage</Button>
       <Summary/>
       <H1>Spending breakdown</H1>
       <Chart dataSource={transactionsSumForLast4Months}/>
