@@ -15,6 +15,10 @@ const settingsSlice = createSlice({
       state.limit = payload
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
     },
+    setCurrency: (state, { payload }) => {
+      state.currency = payload
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+    },
     clearState: () => {
       localStorage.removeItem(STORAGE_KEY)
       return SettingsModel.toJSON(SettingsModel.fromJSON({}))
