@@ -2,6 +2,7 @@ import { useTheme } from 'styled-components'
 import { Flex, H3 } from '../styled'
 import { ReactNode, useEffect, useState } from 'react'
 import { FaAngleRight } from 'react-icons/fa6'
+import { IconRenderer } from '../icon-renderer/IconRenderer.tsx'
 
 interface Props {
   icon?: string,
@@ -41,10 +42,11 @@ export function Card({ icon, iconColor, left, children, right, onClick }: Props)
 
   return (
     <Flex $gap="8px" $align="center" style={{ height: 48 }} onClick={onClick}>
-      {IconComponent ? <Flex $justify="center" $align="center"
-                             style={{ height: 32, width: 32, borderRadius: 30, backgroundColor: iconColor, zIndex: 2 }}>
-        <IconComponent size="18px" color="white"/></Flex> : left
-      }
+      {/*{IconComponent ? <Flex $justify="center" $align="center"*/}
+      {/*                       style={{ height: 32, width: 32, borderRadius: 30, backgroundColor: iconColor, zIndex: 2 }}>*/}
+      {/*  <IconComponent size="18px" color="white"/></Flex> : left*/}
+      {/*}*/}
+      {icon ? <IconRenderer icon={icon} color={iconColor} size="32px"/> : left}
       <Flex $grow="1" $shrink="1" $basis="0"><H3>{children}</H3></Flex>
       {right ? right : <FaAngleRight color={font.tertiary}/>}
     </Flex>

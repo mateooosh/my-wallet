@@ -13,6 +13,8 @@ declare module 'styled-components' {
       danger: string
       warning: string
       divider: string
+      dangerSelected: string
+      primarySelected: string
     }
   }
 }

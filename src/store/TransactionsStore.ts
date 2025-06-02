@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import TransactionModel from '../models/TransactionModel.ts'
 import _ from 'lodash'
-import { getLast4Months, sortByDate } from '../utils/utils.ts'
+import { getLastNMonths, sortByDate } from '../utils/utils.ts'
 
 const STORAGE_KEY = 'my-wallet|transactions'
 
@@ -46,16 +46,35 @@ export const getMappedTransactions = (state): { [key: string]: { [key: string]: 
   return groupedByYearAndMonth
 }
 
-export const getTransactionsSumForLast4Months = (state) => {
-  const months: number = 4
+export const getTransactionsSumForLastMonths = (state: any) => {
   const result = []
+  const mappedTransactions = getMappedTransactions(state)
   const d: Date = new Date()
   d.setDate(1)
+
+  const currentYearKey: string = _.toString(d.getFullYear())
+  const currentMonthKey: string = _.padStart(_.toString(d.getMonth() + 1), 2, '0')
+
+  let earliestYear: number = parseInt(currentYearKey)
+  let earliestMonth: number = parseInt(currentMonthKey)
+
+  _.forEach(_.entries(mappedTransactions), ([yearStr, monthsObj]) => {
+    const year: number = parseInt(yearStr, 10)
+    const monthKeys: number[] = Object.keys(monthsObj).map(m => parseInt(m, 10))
+    const minMonth: number = Math.min(...monthKeys)
+
+    if (year < earliestYear || (year === earliestYear && minMonth < earliestMonth)) {
+      earliestYear = year
+      earliestMonth = minMonth
+    }
+  })
+
+  const months: number = (currentYearKey - earliestYear) * 12 + (parseInt(currentMonthKey) - earliestMonth) + 1
 
   for (let i: number = 0; i < months; i++) {
     const yearKey: number = d.getFullYear()
     const monthKey: string = _.padStart(_.toString(d.getMonth() + 1), 2, '0')
-    let allTransactionsInMonth: any = getMappedTransactions(state)?.[yearKey]?.[monthKey]
+    let allTransactionsInMonth: any = mappedTransactions?.[yearKey]?.[monthKey]
 
     let valuesByMonth = _.reduce(allTransactionsInMonth, (result, transaction: TransactionModel) => {
       return result + transaction.amount
@@ -63,7 +82,7 @@ export const getTransactionsSumForLast4Months = (state) => {
 
     result.push({
       value: Math.abs(_.round(valuesByMonth, 1)),
-      label: getLast4Months()[i]
+      label: getLastNMonths(months)[i]
     })
     d.setMonth(d.getMonth() - 1)
   }

@@ -21,13 +21,17 @@ function Settings() {
     dispatch({ type: 'settings/toggleDarkMode' })
   }
 
+  const goToCategories = (): void => {
+    navigate('/my-wallet/settings/categories')
+  }
+
   const goToDocumentation = (): void => {
     navigate('/my-wallet/settings/documentation')
   }
 
   const clearStorage = (): void => {
-    dispatch({ type: 'transactions/clearState' })
-    dispatch({ type: 'settings/clearState' })
+    // dispatch({ type: 'transactions/clearState' })
+    // dispatch({ type: 'settings/clearState' })
   }
 
   const onLimitChange = (value): void => {
@@ -56,7 +60,7 @@ function Settings() {
                 right={<Switch value={darkMode} onChange={toggleTheme}/>}>
             Dark mode
           </Card>
-          <Card icon="FaShapes" iconColor="#2ECC71">Categories</Card>
+          <Card onClick={goToCategories} icon="FaShapes" iconColor="#2ECC71">Categories</Card>
           <Card icon="FaGaugeHigh" iconColor="#E67E22"
                 right={<InputNumber value={limit} onChange={onLimitChange}
                                     size="large" min={0} max={1000000} type="number"

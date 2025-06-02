@@ -12,6 +12,7 @@ import EditTransaction from './views/edit-transaction/EditTransaction.tsx'
 import store from './store/store.ts'
 import { BottomBar } from './components'
 import Settings from './views/settings/Settings.tsx'
+import SettingsCategories from './views/settings-categories/SettingsCategories.tsx'
 
 const Layout = () => {
   const theme = useTheme()
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
           {
             path: '/my-wallet/settings/documentation',
             element: <Documentation/>
+          },
+          {
+            path: '/my-wallet/settings/categories',
+            element: <SettingsCategories/>
           }
         ]
       }

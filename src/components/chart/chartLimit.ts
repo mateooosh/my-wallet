@@ -11,7 +11,6 @@ export const ChartLimit = styled.div<ChartLimitProps>`
   position: absolute;
   bottom: ${({ $limitHeight }) => ($limitHeight) + '%'};
   left: -8px;
-  //right: -8px;
   height: ${({ $height }) => ($height) + 'px'};
   width: calc(100% + 16px);
   border-radius: 6px;

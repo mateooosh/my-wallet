@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import * as _ from 'lodash'
 import TransactionModel from '../../models/TransactionModel.ts'
 import { useSelector } from 'react-redux'
-import { getTransactionsSumForLast4Months } from '../../store/TransactionsStore.ts'
+import { getTransactionsSumForLastMonths } from '../../store/TransactionsStore.ts'
 import { Empty } from 'antd'
 
 function Main() {
@@ -14,7 +14,7 @@ function Main() {
   const navigate = useNavigate()
 
   const transactions = useSelector(({ transactions }) => transactions)
-  const transactionsSumForLast4Months = useSelector(getTransactionsSumForLast4Months)
+  const transactionsSumForLast4Months = useSelector(getTransactionsSumForLastMonths)
 
   const spendings: TransactionModel[] = useMemo(() => {
     return _.filter(transactions, (transaction: TransactionModel): boolean => transaction.amount < 0)

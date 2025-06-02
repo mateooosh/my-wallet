@@ -47,12 +47,12 @@ export const CURRENCIES = ['CHF', 'EUR', 'GBP', 'PLN', 'USD']
 //   { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$' }
 // ];
 
-export const getLast4Months = (): string[] => {
+export const getLastNMonths = (n: number): string[] => {
   const result: string[] = []
   const d: Date = new Date()
   d.setDate(1)
 
-  for (let i: number = 0; i < 4; i++) {
+  for (let i: number = 0; i < n; i++) {
     result.push(MONTHS[d.getMonth()])
     d.setMonth(d.getMonth() - 1)
   }

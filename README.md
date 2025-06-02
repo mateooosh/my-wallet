@@ -51,3 +51,8 @@ export default tseslint.config({
 
 ### Demo
 https://mateooosh.github.io/my-wallet/
+
+### ToDo
+- clone spending (maybe context menu?)
+- delete
+- on chart bar click show details of given month

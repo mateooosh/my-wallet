@@ -11,7 +11,9 @@ export const light: DefaultTheme = {
     background: '#FDFDFD',
     danger: '#DB6565',
     warning: '#FDC323',
-    divider: '#EEE'
+    divider: '#EEE',
+    primarySelected: '#00604a',
+    dangerSelected: '#cf3131'
   }
 }
 
@@ -26,6 +28,8 @@ export const dark: DefaultTheme = {
     background: '#222222',
     danger: '#DB6565',
     warning: '#FDC323',
-    divider: '#282828'
+    divider: '#282828',
+    primarySelected: '#00604a',
+    dangerSelected: '#cf3131'
   }
 }

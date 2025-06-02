@@ -20,6 +20,7 @@ export function Chart({ dataSource }: Props) {
   const { theme } = useTheme()
 
   const chartRef = useRef<HTMLDivElement>(null)
+  const scrollableContainer = useRef<HTMLDivElement>(null)
 
   const limit = useSelector(({ settings }) => settings.limit)
   const [yAxisWidth, setYAxisWidth] = useState(30)
@@ -63,26 +64,36 @@ export function Chart({ dataSource }: Props) {
     }
   }, [dataSource, limit])
 
+  useEffect(() => {
+    // scroll to right
+    scrollableContainer.current.scrollLeft = scrollableContainer.current.scrollWidth
+  }, [])
+
   return (
-    <Flex $gap="16px" style={{ paddingBottom: 24, height: 200 }} ref={chartRef}>
-      <Flex $direction="column" $align="center" $justify="space-between" style={{ width: yAxisWidth, position: 'relative' }}>
+    <Flex $gap="16px" style={{ height: 200 }} ref={chartRef}>
+      <Flex $direction="column" $align="center" $justify="space-between" style={{ width: yAxisWidth, position: 'relative', marginBottom: 24 }}>
         {yAxis.map((value: number, key: number) =>
           value !== limit ? (
             <Body2 key={key} className="label-y" style={{ position: 'absolute', bottom: value * 100 / max + '%', transform: 'translateY(50%)' }}>{value}</Body2>
           ) : <Pill key={key} style={{ position: 'absolute', bottom: value * 100 / max + '%', transform: 'translateY(50%)' }}>{value}</Pill>
         )}
       </Flex>
-      <Flex $gap="16px" $grow="1" style={{ position: 'relative' }}>
-        {dataSource.map((item: DataSourceItem, key: number) =>
-          <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={limit}/>
-        )}
-        {yAxis.map((value: number, key: number) =>
-          <ChartLimit key={key}
-                      $limitHeight={value / max * 100}
-                      $height={value === limit ? 2 : 1}
-                      $background={value === limit ? theme.danger : theme.divider}/>
-        )}
-      </Flex>
+      <div style={{ width: '100%' }}>
+        <Flex className="hide-scrollbar" ref={scrollableContainer}
+              style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', paddingBottom: 26, paddingTop: 2, paddingLeft: 8, paddingRight: 8 }}>
+          <Flex $grow="1" $shrink="1" $basis="0" $gap="16px" style={{ position: 'relative' }}>
+            {dataSource.map((item: DataSourceItem, key: number) =>
+              <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={limit}/>
+            )}
+            {yAxis.map((value: number, key: number) =>
+              <ChartLimit key={key}
+                          $limitHeight={value / max * 100}
+                          $height={value === limit ? 2 : 1}
+                          $background={value === limit ? theme.danger : theme.divider}/>
+            )}
+          </Flex>
+        </Flex>
+      </div>
     </Flex>
   )
 }

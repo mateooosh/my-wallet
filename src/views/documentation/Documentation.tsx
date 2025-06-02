@@ -1,44 +1,11 @@
 import { useTheme } from 'styled-components'
 import { dark, light } from '../../styles/Theme.ts'
-import { Body1, Body2, Caption1, Caption2, H1, H2, H3, H4, Flex, Grid } from '../../components/styled'
+import { Body1, Body2, Caption1, Caption2, Flex, Grid, H1, H2, H3, H4 } from '../../components/styled'
 import * as _ from 'lodash'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment } from 'react'
 import { useSelector } from 'react-redux'
 import CategoryModel from '../../models/CategoryModel.ts'
-import { NavBar } from '../../components'
-
-function IconRenderer({ category }) {
-  const [DynamicIcon, setDynamicIcon] = useState(null)
-
-  useEffect(() => {
-    async function loadIcon() {
-      try {
-        const { [category.icon]: Icon } = await import('react-icons/fa6')
-        setDynamicIcon(() => Icon)
-      } catch (error) {
-        console.error(`Error loading icon ${category.icon}:`, error)
-      }
-    }
-
-    loadIcon()
-  }, [category.icon])
-
-  return DynamicIcon ? (
-    <Flex
-      $justify="center"
-      $align="center"
-      style={{
-        height: 30,
-        width: 30,
-        borderRadius: 30,
-        backgroundColor: category.color,
-        zIndex: 2
-      }}
-    >
-      <DynamicIcon size="18px" color="white"/>
-    </Flex>
-  ) : null
-}
+import { IconRenderer, NavBar } from '../../components'
 
 function Documentation() {
   const theme = useTheme()
@@ -94,7 +61,7 @@ function Documentation() {
             <Fragment key={category.id}>
               <div>{category.id}</div>
               <div>{category.name}</div>
-              <IconRenderer category={category}/>
+              <IconRenderer icon={category.icon} color={category.color}/>
               <div style={{ backgroundColor: category.color }}></div>
             </Fragment>
           )}
