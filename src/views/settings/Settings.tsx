@@ -1,5 +1,5 @@
 import { useTheme } from 'styled-components'
-import { Flex } from '../../components/styled'
+import { Flex, H4 } from '../../components/styled'
 import { Card, NavBar } from '../../components'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -8,8 +8,10 @@ import React, { useMemo } from 'react'
 import * as _ from 'lodash'
 import { CURRENCIES } from '../../utils/utils.ts'
 
+const appVersion: string = APP_VERSION
+
 function Settings() {
-  const theme = useTheme()
+  const {  font } = useTheme()
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -77,6 +79,10 @@ function Settings() {
           </Card>
           <Card onClick={clearStorage} icon="FaTrashCan" iconColor="#E74C3C">Clear data</Card>
           <Card icon="FaEarthAmericas" iconColor="#3498DB">Language</Card>
+          <Card icon="FaCircleInfo" iconColor="#6C757D"
+                right={<H4 style={{ color: font.secondary }}>{appVersion}</H4>}>
+            Version
+          </Card>
         </div>
       </Flex>
     </div>

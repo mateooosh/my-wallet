@@ -24,6 +24,9 @@ export default defineConfig({
   server: {
     host: '0.0.0.0'
   },
+  define: {
+    APP_VERSION: JSON.stringify(process.env.npm_package_version)
+  },
   base: process.env.NODE_ENV === 'production'
     ? '/my-wallet/'
     : '/'
