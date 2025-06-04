@@ -10,20 +10,23 @@ import { Pill } from '../pill/Pill.tsx'
 interface DataSourceItem {
   value: number
   label: string
+  id: string
 }
 
 interface Props {
   dataSource: Array<DataSourceItem>
+  onSelectedBarChange: (selectedIndex: string) => void
 }
 
-export function Chart({ dataSource }: Props) {
+export function Chart({ dataSource, onSelectedBarChange }: Props) {
   const { theme } = useTheme()
 
   const chartRef = useRef<HTMLDivElement>(null)
   const scrollableContainer = useRef<HTMLDivElement>(null)
 
   const limit = useSelector(({ settings }) => settings.limit)
-  const [yAxisWidth, setYAxisWidth] = useState(30)
+  const [yAxisWidth, setYAxisWidth] = useState<number>(30)
+  const [selectedBarId, setSelectedBarId] = useState<string>(null)
 
   const generateYAxisLabels = (maxValue: number): number[] => {
     const numberOfSteps: number = 4
@@ -69,6 +72,14 @@ export function Chart({ dataSource }: Props) {
     scrollableContainer.current.scrollLeft = scrollableContainer.current.scrollWidth
   }, [])
 
+  useEffect(() => {
+    onSelectedBarChange(selectedBarId)
+  }, [selectedBarId])
+
+  const onBarClick = (barId: string): void => {
+    setSelectedBarId(selectedBarId === barId ? null : barId)
+  }
+
   return (
     <Flex $gap="16px" style={{ height: 200 }} ref={chartRef}>
       <Flex $direction="column" $align="center" $justify="space-between" style={{ width: yAxisWidth, position: 'relative', marginBottom: 24 }}>
@@ -83,7 +94,7 @@ export function Chart({ dataSource }: Props) {
               style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', paddingBottom: 26, paddingTop: 2, paddingLeft: 8, paddingRight: 8 }}>
           <Flex $grow="1" $shrink="1" $basis="0" $gap="16px" style={{ position: 'relative' }}>
             {dataSource.map((item: DataSourceItem, key: number) =>
-              <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={limit}/>
+              <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={limit} isSelected={selectedBarId === item.id} onBarClick={() => onBarClick(item.id)}/>
             )}
             {yAxis.map((value: number, key: number) =>
               <ChartLimit key={key}

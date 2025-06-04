@@ -6,13 +6,13 @@ interface Props {
   caption: string
   value: number
   height: number
-  limit: number
+  limit: number,
+  isSelected: boolean,
+  onBarClick: () => void
 }
 
-export function ChartBar({ caption, value, height, limit }: Props) {
+export function ChartBar({ caption, value, height, limit, isSelected, onBarClick }: Props) {
   const { theme } = useTheme()
-
-  const [isSelected, setIsSelected] = useState(false)
 
   const isOverLimit: boolean = useMemo((): boolean => {
     return value >= limit
@@ -26,7 +26,7 @@ export function ChartBar({ caption, value, height, limit }: Props) {
     }
   }, [isOverLimit, isSelected])
 
-  const [animatedHeight, setAnimatedHeight] = useState(0)
+  const [animatedHeight, setAnimatedHeight] = useState<number>(0)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -39,14 +39,10 @@ export function ChartBar({ caption, value, height, limit }: Props) {
     return height > 14
   }, [height])
 
-  const onChartBarClick = () => {
-    setIsSelected(isSelected => !isSelected)
-  }
-
   return (
-    <Flex $direction="column" $gap="8px" $grow="1" $shrink="1" $basis="0" $justify="end" onClick={onChartBarClick}
+    <Flex $direction="column" $gap="8px" $grow="1" $shrink="1" $basis="0" $justify="end"
           style={{ position: 'relative', minWidth: 50 }}>
-      <Flex $align="flex-end" $justify="center" style={{ backgroundColor: barBackground, borderRadius: 6, height: animatedHeight + '%', color: 'white', zIndex: 1, transition: 'height 1s cubic-bezier(0.4, 0, 0, 1)' }}>
+      <Flex onClick={onBarClick} $align="flex-end" $justify="center" style={{ backgroundColor: barBackground, borderRadius: 6, height: animatedHeight + '%', color: 'white', zIndex: 1, transition: 'height 1s cubic-bezier(0.4, 0, 0, 1)' }}>
         {showValue &&
           <span style={{ marginBottom: 8 }}>{ value }</span>
         }

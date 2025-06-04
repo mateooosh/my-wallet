@@ -6,6 +6,7 @@
   "homepage": "https://mateooosh.github.io/my-wallet/",
   "scripts": {
     "dev": "vite",
+    "host": "vite --host",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"

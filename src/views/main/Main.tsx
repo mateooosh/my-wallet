@@ -2,23 +2,35 @@ import { CategoryItem, Chart, Summary, TransactionItem } from '../../components'
 import { Body2, Flex, H1 } from '../../components/styled'
 import { useTheme } from 'styled-components'
 import { useNavigate } from 'react-router-dom'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import * as _ from 'lodash'
 import TransactionModel from '../../models/TransactionModel.ts'
 import { useSelector } from 'react-redux'
-import { getTransactionsSumForLastMonths } from '../../store/TransactionsStore.ts'
+import { getMappedTransactions, getTransactionsSumForLastMonths } from '../../store/TransactionsStore.ts'
 import { Empty } from 'antd'
 
 function Main() {
   const theme = useTheme()
   const navigate = useNavigate()
 
+  const [selectedChartBarId, setSelectedChartBarId] = useState<string>(null)
+
   const transactions = useSelector(({ transactions }) => transactions)
-  const transactionsSumForLast4Months = useSelector(getTransactionsSumForLastMonths)
+  const mappedTransactions = useSelector(getMappedTransactions)
+  const transactionsSumForLastMonths = useSelector(getTransactionsSumForLastMonths)
+
+  const filteredTransactions: TransactionModel[] = useMemo(() => {
+    if (selectedChartBarId) {
+      const [month, year] = _.split(selectedChartBarId, '|')
+      return mappedTransactions[year][month]
+    } else {
+      return transactions
+    }
+  }, [transactions, selectedChartBarId])
 
   const spendings: TransactionModel[] = useMemo(() => {
-    return _.filter(transactions, (transaction: TransactionModel): boolean => transaction.amount < 0)
-  }, [transactions])
+    return _.filter(filteredTransactions, (transaction: TransactionModel): boolean => transaction.amount < 0)
+  }, [filteredTransactions])
 
   const totalSpending: number = useMemo(() => {
     return Math.abs(_.sumBy(spendings, 'amount'))
@@ -56,7 +68,7 @@ function Main() {
       {!_.isEmpty(transactions) &&
         <>
           <H1>Spending breakdown</H1>
-          <Chart dataSource={transactionsSumForLast4Months}/>
+          <Chart dataSource={transactionsSumForLastMonths} onSelectedBarChange={(barId: string) => setSelectedChartBarId(barId)}/>
 
           <H1>Spending details</H1>
           <Flex $direction="column" $gap="4px">
@@ -73,7 +85,7 @@ function Main() {
             <Body2 onClick={() => navigate('/my-wallet/transactions')}>See all</Body2>
           </Flex>
           <Flex $direction="column" $gap="1px" style={{ backgroundColor: theme.theme.divider }}>
-            {transactions.slice(0, 5).map(({ categoryName, date, amount, description, id }: TransactionModel, key: number) =>
+            {filteredTransactions.slice(0, 5).map(({ categoryName, date, amount, description, id }: TransactionModel, key: number) =>
               <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount} description={description} id={id}/>
             )}
           </Flex>

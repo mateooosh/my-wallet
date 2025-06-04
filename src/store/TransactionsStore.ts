@@ -82,11 +82,11 @@ export const getTransactionsSumForLastMonths = (state: any) => {
 
     result.push({
       value: Math.abs(_.round(valuesByMonth, 1)),
-      label: getLastNMonths(months)[i]
+      label: getLastNMonths(months)[i],
+      id: `${monthKey}|${yearKey}`
     })
     d.setMonth(d.getMonth() - 1)
   }
-
   return _.reverse(result)
 }
 

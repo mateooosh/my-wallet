@@ -8,7 +8,7 @@ interface Props {
 export function ProgressBar({ value = 0 }: Props) {
   const { theme } = useTheme()
 
-  const [animatedValue, setAnimatedValue] = useState(0)
+  const [animatedValue, setAnimatedValue] = useState<number>(0)
 
   useEffect(() => {
     const timeout = setTimeout(() => {
