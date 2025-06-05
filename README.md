@@ -55,4 +55,4 @@ https://mateooosh.github.io/my-wallet/
 ### ToDo
 - clone spending (maybe context menu?)
 - delete
-- on chart bar click show details of given month
+- ~~on chart bar click show details of given month~~

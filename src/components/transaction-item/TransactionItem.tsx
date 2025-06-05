@@ -1,11 +1,14 @@
 import { useTheme } from 'styled-components'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Body1, Caption2, Flex, H3 } from '../styled'
 import { formatValue } from '../../utils/utils.ts'
 import { useSelector } from 'react-redux'
 import SettingsModel from '../../models/SettingsModel.ts'
 import { useNavigate } from 'react-router-dom'
 import _ from 'lodash'
+import useLongPress from '../../hooks/useLongPress.ts'
+import { Dropdown } from 'antd'
+import { IconRenderer } from '../icon-renderer/IconRenderer.tsx'
 
 interface Props {
   categoryName: string
@@ -47,18 +50,64 @@ export function TransactionItem({ categoryName, amount = null, date, description
       navigate(`/my-wallet/transaction/${id}`)
   }
 
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false)
+  const [pos, setPos] = useState<any>({ x: 0, y: 0 })
+
+  const onLongPress = (e) => {
+    const x = e.clientX || (e.touches?.[0]?.clientX ?? 0)
+    const y = e.clientY || (e.touches?.[0]?.clientY ?? 0)
+    setPos({ x, y })
+    setDropdownOpen(true)
+  }
+
+  const dropdownOptions = [
+    { key: 'clone', label: 'Clone', icon: <div><IconRenderer icon="FaHeartPulse" color={font.tertiary} size="24px"/></div> },
+    { key: 'remove', label: 'Remove', icon: <div><IconRenderer icon="FaXmark" color={theme.danger} size="24px"/></div>, danger: true }
+  ]
+
+  const onDropdownOptionClick = ({ key }) => {
+    if (key === 'clone') {
+      navigate(`/my-wallet/transaction`, {
+        state: { categoryName, amount , date, description, backgroundColor , id }
+      })
+    }
+  }
+
+  const longPressEvent = useLongPress(onLongPress, onClick, 500)
+
   return (
-    <Flex onClick={onClick} $gap="8px" $align="center"
-          style={{ backgroundColor: backgroundColor || theme.background, padding: '3px 0' }}>
-      {IconComponent ? <Flex $justify="center" $align="center"
-                             style={{ height: 30, width: 30, borderRadius: 30, backgroundColor: iconColor, zIndex: 2 }}>
-        <IconComponent size="18px" color="white"/></Flex> : null
-      }
-      <Flex $direction="column" $grow="1">
-        <Body1>{description || categoryName}</Body1>
-        <Caption2 style={{ color: font.secondary }}>{date}</Caption2>
+    <>
+      <Dropdown
+        menu={{ items: dropdownOptions, onClick: onDropdownOptionClick }}
+        open={dropdownOpen}
+        onOpenChange={setDropdownOpen}
+        trigger={[]}
+        getPopupContainer={() => document.body}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            top: pos.y,
+            left: pos.x,
+            width: 0,
+            height: 0,
+            zIndex: 1000,
+          }}
+        />
+      </Dropdown>
+
+      <Flex {...longPressEvent} $gap="8px" $align="center"
+            style={{ backgroundColor: backgroundColor || theme.background, padding: '3px 0' }}>
+        {IconComponent ? <Flex $justify="center" $align="center"
+                               style={{ height: 30, width: 30, borderRadius: 30, backgroundColor: iconColor, zIndex: 2 }}>
+          <IconComponent size="18px" color="white"/></Flex> : null
+        }
+        <Flex $direction="column" $grow="1">
+          <Body1>{description || categoryName}</Body1>
+          <Caption2 style={{ color: font.secondary }}>{date}</Caption2>
+        </Flex>
+        {amount && <H3 style={{ color: amountColor }}>{formatValue(amount)} {currency}</H3>}
       </Flex>
-      {amount && <H3 style={{ color: amountColor }}>{formatValue(amount)} {currency}</H3>}
-    </Flex>
+    </>
   )
 }

@@ -6,9 +6,9 @@ import { AutoComplete, Button, DatePicker, Input, InputNumber, Select } from 'an
 import { useDispatch, useSelector } from 'react-redux'
 import * as _ from 'lodash'
 import CategoryModel from '../../models/CategoryModel.ts'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { dd_mm_yyyy, parseToDayJS } from '../../utils/utils.ts'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getAllUniqDescriptions, getNewTransactionID, getTransactionByID } from '../../store/TransactionsStore.ts'
 import './edit-transaction.css'
 
@@ -16,6 +16,7 @@ const { TextArea } = Input
 
 function EditTransaction() {
   const { id } = useParams()
+  const location = useLocation()
 
   const theme = useTheme()
   const dispatch = useDispatch()
@@ -29,6 +30,14 @@ function EditTransaction() {
   const categories = useSelector(({ settings }) => settings.categories)
   const currency = useSelector(({ settings }) => settings.currency)
   const descriptionOptions = useSelector(getAllUniqDescriptions)
+
+  useEffect(() => {
+    if (location?.state) {
+      onCategoryChange(location.state?.categoryName)
+      onAmountChange(-location.state?.amount)
+      onDescriptionChange(location.state?.description)
+    }
+  }, [])
 
   const categoriesDataSource = useMemo(() => {
     return _.map(categories, (category: CategoryModel) => {
