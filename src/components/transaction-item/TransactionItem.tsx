@@ -17,9 +17,10 @@ interface Props {
   description?: string
   backgroundColor?: string
   id?: number
+  showContextMenu?: boolean
 }
 
-export function TransactionItem({ categoryName, amount = null, date, description, backgroundColor = null, id }: Props) {
+export function TransactionItem({ categoryName, amount = null, date, description, backgroundColor = null, id, showContextMenu = false }: Props) {
   const { theme, font } = useTheme()
   const navigate = useNavigate()
 
@@ -73,28 +74,30 @@ export function TransactionItem({ categoryName, amount = null, date, description
     }
   }
 
-  const longPressEvent = useLongPress(onLongPress, onClick, 500)
+  const longPressEvent = showContextMenu ? useLongPress(onLongPress, onClick, 500) : {}
 
   return (
     <>
-      <Dropdown
-        menu={{ items: dropdownOptions, onClick: onDropdownOptionClick }}
-        open={dropdownOpen}
-        onOpenChange={setDropdownOpen}
-        trigger={[]}
-        getPopupContainer={() => document.body}
-      >
-        <div
-          style={{
-            position: 'absolute',
-            top: pos.y,
-            left: pos.x,
-            width: 0,
-            height: 0,
-            zIndex: 1000,
-          }}
-        />
-      </Dropdown>
+      {showContextMenu &&
+        <Dropdown
+          menu={{ items: dropdownOptions, onClick: onDropdownOptionClick }}
+          open={dropdownOpen}
+          onOpenChange={setDropdownOpen}
+          trigger={[]}
+          getPopupContainer={() => document.body}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              top: pos.y,
+              left: pos.x,
+              width: 0,
+              height: 0,
+              zIndex: 1000
+            }}
+          />
+        </Dropdown>
+      }
 
       <Flex {...longPressEvent} $gap="8px" $align="center"
             style={{ backgroundColor: backgroundColor || theme.background, padding: '3px 0' }}>

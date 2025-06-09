@@ -64,13 +64,15 @@ export function Chart({ dataSource, onSelectedBarChange }: Props) {
       const allWidths: number[] = [..._.map(yLabels, (labelElem) => labelElem.getBoundingClientRect().width), pillWidth]
       const maxWidth: number = _.max(allWidths) as number
       setYAxisWidth(maxWidth)
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          if (scrollableContainer.current) {
+            scrollableContainer.current.scrollLeft = scrollableContainer.current.scrollWidth
+          }
+        }, 0)
+      })
     }
   }, [dataSource, limit])
-
-  useEffect(() => {
-    // scroll to right
-    scrollableContainer.current.scrollLeft = scrollableContainer.current.scrollWidth
-  }, [])
 
   useEffect(() => {
     onSelectedBarChange(selectedBarId)
@@ -81,18 +83,18 @@ export function Chart({ dataSource, onSelectedBarChange }: Props) {
   }
 
   return (
-    <Flex $gap="16px" style={{ height: 200 }} ref={chartRef}>
+    <Flex $gap="8px" style={{ height: 200 }} ref={chartRef}>
       <Flex $direction="column" $align="center" $justify="space-between" style={{ width: yAxisWidth, position: 'relative', marginBottom: 24 }}>
         {yAxis.map((value: number, key: number) =>
           value !== limit ? (
             <Body2 key={key} className="label-y" style={{ position: 'absolute', bottom: value * 100 / max + '%', transform: 'translateY(50%)' }}>{value}</Body2>
-          ) : <Pill key={key} style={{ position: 'absolute', bottom: value * 100 / max + '%', transform: 'translateY(50%)' }}>{value}</Pill>
+          ) : <Pill key={key} className="label-y" style={{ position: 'absolute', bottom: value * 100 / max + '%', transform: 'translateY(50%)' }}>{value}</Pill>
         )}
       </Flex>
-      <div style={{ width: '100%' }}>
+      <Flex $grow="1" $shrink="1" $basis="0" style={{ overflow: 'hidden' }}>
         <Flex className="hide-scrollbar" ref={scrollableContainer}
               style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', paddingBottom: 26, paddingTop: 2, paddingLeft: 8, paddingRight: 8 }}>
-          <Flex $grow="1" $shrink="1" $basis="0" $gap="16px" style={{ position: 'relative' }}>
+          <Flex $grow="1" $shrink="1" $basis="0" $gap="8px" style={{ position: 'relative' }}>
             {dataSource.map((item: DataSourceItem, key: number) =>
               <ChartBar key={key} caption={item.label} value={item.value} height={(item.value / max) * 100} limit={limit} isSelected={selectedBarId === item.id} onBarClick={() => onBarClick(item.id)}/>
             )}
@@ -104,7 +106,7 @@ export function Chart({ dataSource, onSelectedBarChange }: Props) {
             )}
           </Flex>
         </Flex>
-      </div>
+      </Flex>
     </Flex>
   )
 }

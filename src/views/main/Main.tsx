@@ -86,7 +86,7 @@ function Main() {
           </Flex>
           <Flex $direction="column" $gap="1px" style={{ backgroundColor: theme.theme.divider }}>
             {filteredTransactions.slice(0, 5).map(({ categoryName, date, amount, description, id }: TransactionModel, key: number) =>
-              <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount} description={description} id={id}/>
+              <TransactionItem key={key} categoryName={categoryName} date={date} amount={amount} description={description} id={id} showContextMenu={true}/>
             )}
           </Flex>
         </>

@@ -136,7 +136,7 @@ function Transactions() {
         <Flex $direction="column" $gap="1px" style={{ backgroundColor: theme.theme.divider }}>
           {/*<H3 style={{ padding: '4px 8px' }}>14 January 2024</H3>*/}
           {filteredTransactions.map(({ categoryName, date, amount, description, id }: TransactionModel, key: number) =>
-            <TransactionItem key={key} categoryName={categoryName} description={description} date={date} amount={amount} id={id}/>
+            <TransactionItem key={key} categoryName={categoryName} description={description} date={date} amount={amount} id={id} showContextMenu={true}/>
           )}
         </Flex>
       </Flex>
