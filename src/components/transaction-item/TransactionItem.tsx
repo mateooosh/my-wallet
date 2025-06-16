@@ -1,5 +1,5 @@
 import { useTheme } from 'styled-components'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Body1, Caption2, Flex, H3 } from '../styled'
 import { formatValue } from '../../utils/utils.ts'
 import { useSelector } from 'react-redux'
@@ -9,6 +9,7 @@ import _ from 'lodash'
 import useLongPress from '../../hooks/useLongPress.ts'
 import { Dropdown } from 'antd'
 import { IconRenderer } from '../icon-renderer/IconRenderer.tsx'
+import { useOutsideEvents } from '../../hooks/useOutsideEvents.ts'
 
 interface Props {
   categoryName: string
@@ -30,6 +31,7 @@ export function TransactionItem({ categoryName, amount = null, date, description
   const iconColor: string = useMemo(() => categoriesMap[categoryName]?.color || theme.primary, [categoriesMap, categoryName])
 
   const [IconComponent, setIconComponent] = useState(null)
+  const containerRef = useRef(null)
 
   const amountColor: string = useMemo((): string => amount >= 0 ? theme.primary : '#B50000', [amount])
 
@@ -76,30 +78,30 @@ export function TransactionItem({ categoryName, amount = null, date, description
 
   const longPressEvent = showContextMenu ? useLongPress(onLongPress, onClick, 500) : {}
 
+  useOutsideEvents(containerRef, () => setDropdownOpen(false))
+
   return (
     <>
       {showContextMenu &&
-        <Dropdown
-          menu={{ items: dropdownOptions, onClick: onDropdownOptionClick }}
-          open={dropdownOpen}
-          onOpenChange={setDropdownOpen}
-          trigger={[]}
-          getPopupContainer={() => document.body}
-        >
-          <div
-            style={{
-              position: 'absolute',
-              top: pos.y,
-              left: pos.x,
-              width: 0,
-              height: 0,
-              zIndex: 1000
-            }}
+          <Dropdown
+                  menu={{ items: dropdownOptions, onClick: onDropdownOptionClick }}
+                  open={dropdownOpen}
+                  onOpenChange={setDropdownOpen}
+                  trigger={[]}
+                  getPopupContainer={() => document.body}>
+          <div style={{
+            position: 'absolute',
+            top: pos.y,
+            left: pos.x,
+            width: 0,
+            height: 0,
+            zIndex: 1000
+          }}
           />
         </Dropdown>
       }
 
-      <Flex {...longPressEvent} $gap="8px" $align="center"
+      <Flex {...longPressEvent} $gap="8px" $align="center" ref={containerRef}
             style={{ backgroundColor: backgroundColor || theme.background, padding: '3px 0' }}>
         {IconComponent ? <Flex $justify="center" $align="center"
                                style={{ height: 30, width: 30, borderRadius: 30, backgroundColor: iconColor, zIndex: 2 }}>

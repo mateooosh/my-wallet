@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from 'react'
 
 const useLongPress = (onLongPress, onClick, delay = 300) => {
   const [longPressTriggered, setLongPressTriggered] = useState<boolean>(false)
+  const [moved, setMoved] = useState<boolean>(false)
   const timeout = useRef<any>(null)
   const target = useRef<any>(null)
 
@@ -18,29 +19,35 @@ const useLongPress = (onLongPress, onClick, delay = 300) => {
     [onLongPress, delay]
   )
 
+  const move = useCallback(() => {
+    clearTimeout(timeout.current)
+    setMoved(true)
+  }, [timeout])
+
   const clear = useCallback((event, shouldTriggerClick = true) => {
-      if (timeout.current) {
-        clearTimeout(timeout.current)
-      }
+    if (timeout.current) {
+      clearTimeout(timeout.current)
+    }
 
-      if (shouldTriggerClick && !longPressTriggered) {
-        onClick()
-      }
+    if (shouldTriggerClick && !longPressTriggered && !moved) {
+      onClick()
+    }
 
-      setLongPressTriggered(false)
-      if (target.current) {
-        target.current.removeEventListener('touchend', preventDefault)
-      }
-    },
-    [onClick, longPressTriggered]
-  )
+    setLongPressTriggered(false)
+
+    if (target.current) {
+      target.current.removeEventListener('touchend', preventDefault)
+    }
+  }, [onClick, longPressTriggered, timeout, moved])
 
   return {
     onMouseDown: e => start(e),
     onTouchStart: e => start(e),
     onMouseUp: e => clear(e),
     onMouseLeave: e => clear(e, false),
-    onTouchEnd: e => clear(e)
+    onTouchEnd: e => clear(e),
+    onMouseMove: () => move(),
+    onTouchMove: () => move()
   }
 }
 
