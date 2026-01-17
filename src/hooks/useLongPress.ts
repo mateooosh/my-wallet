@@ -30,7 +30,7 @@ const useLongPress = (onLongPress, onClick, delay = 300) => {
     }
 
     if (shouldTriggerClick && !longPressTriggered && !moved) {
-      onClick()
+      onClick(event)
     }
 
     setLongPressTriggered(false)

@@ -64,8 +64,9 @@ export function TransactionItem({ categoryName, amount = null, date, description
   }
 
   const dropdownOptions = [
-    { key: 'clone', label: 'Clone', icon: <div><IconRenderer icon="FaHeartPulse" color={font.tertiary} size="24px"/></div> },
-    { key: 'remove', label: 'Remove', icon: <div><IconRenderer icon="FaXmark" color={theme.danger} size="24px"/></div>, danger: true }
+    { key: 'clone', label: <Body1>Clone</Body1>, icon: <div><IconRenderer icon="FaHeartPulse" color={font.tertiary} size="24px"/></div> },
+    { type: 'divider' },
+    { key: 'remove', label: <Body1>Remove</Body1>, icon: <div><IconRenderer icon="FaXmark" color={theme.danger} size="24px"/></div>, danger: true }
   ]
 
   const onDropdownOptionClick = ({ key }) => {
@@ -83,12 +84,12 @@ export function TransactionItem({ categoryName, amount = null, date, description
   return (
     <>
       {showContextMenu &&
-          <Dropdown
-                  menu={{ items: dropdownOptions, onClick: onDropdownOptionClick }}
-                  open={dropdownOpen}
-                  onOpenChange={setDropdownOpen}
-                  trigger={[]}
-                  getPopupContainer={() => document.body}>
+        <Dropdown
+          menu={{ items: dropdownOptions, onClick: onDropdownOptionClick }}
+          open={dropdownOpen}
+          onOpenChange={setDropdownOpen}
+          trigger={[]}
+          getPopupContainer={() => document.body}>
           <div style={{
             position: 'absolute',
             top: pos.y,

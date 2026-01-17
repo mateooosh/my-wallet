@@ -92,7 +92,7 @@ export function Chart({ dataSource, onSelectedBarChange }: Props) {
         )}
       </Flex>
       <Flex $grow="1" $shrink="1" $basis="0" style={{ overflow: 'hidden' }}>
-        <Flex className="hide-scrollbar" ref={scrollableContainer}
+        <Flex className="hide-scrollbar" ref={scrollableContainer} $grow="1" $shrink="1" $basis="0"
               style={{ height: '100%', overflowX: 'auto', overflowY: 'hidden', paddingBottom: 26, paddingTop: 2, paddingLeft: 8, paddingRight: 8 }}>
           <Flex $grow="1" $shrink="1" $basis="0" $gap="8px" style={{ position: 'relative' }}>
             {dataSource.map((item: DataSourceItem, key: number) =>

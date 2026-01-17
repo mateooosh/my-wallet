@@ -32,8 +32,8 @@ function Settings() {
   }
 
   const clearStorage = (): void => {
-    // dispatch({ type: 'transactions/clearState' })
-    // dispatch({ type: 'settings/clearState' })
+    dispatch({ type: 'transactions/clearState' })
+    dispatch({ type: 'settings/clearState' })
   }
 
   const onLimitChange = (value): void => {
